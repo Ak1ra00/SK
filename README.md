@@ -4,7 +4,7 @@ A vaultless, deterministic password manager backed by a two-party oblivious PRF 
 over ristretto255 and an oracle that lives outside your head — either a physical
 device or a printed square of paper.
 
-Live at **[soufianekh.space](https://soufianekh.space)**.
+Live at **[vaultless.space](https://vaultless.space)**.
 
 The site opens by asking which oracle you have, then walks you through setting it
 up before it asks for anything else:
@@ -149,6 +149,30 @@ the device which account you are opening.
 Note that `env:esp32dev` deliberately does **not** enable flash encryption, so `k`
 is readable from flash by anyone holding the board. Closing that is a separate,
 irreversible step — read `firmware/SECURE_PROVISIONING.md` first.
+
+## Moving domains
+
+The site moved from `soufianekh.space` to `vaultless.space`. Derivation is entirely
+domain-independent — same phrase, same oracle, same passwords — but three things do
+not travel, and one of them matters:
+
+- **The trusted-key set does not move.** `localStorage` is per-origin, so on the new
+  domain every browser starts with nothing pinned and the next derivation trusts your
+  oracle on first use. That is exactly the case the pin exists to catch, so the first
+  use now says which fingerprint it is trusting: compare it against the one on the
+  device's idle screen or printed on your sheet before you rely on the password.
+  Account nicknames and the simple/expert preference are lost the same way.
+
+- **Sheets printed before the move name the old domain.** The key on them is fine —
+  it is just 32 bytes and cares nothing for DNS — but the instruction line points
+  somewhere that may no longer resolve. Either keep a redirect on the old domain or
+  reprint from the same key.
+
+- **Browsers that visited the old domain cached it.** The service worker there serves
+  the shell cache-first, so anyone who used the old address keeps getting that copy of
+  the app, offline-first, even after the domain stops resolving — frozen, and no longer
+  receiving updates. To close that out, serve a page from the OLD origin that
+  unregisters the worker and redirects here.
 
 ## Building the firmware
 
