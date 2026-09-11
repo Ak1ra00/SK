@@ -4,7 +4,7 @@ A vaultless, deterministic password manager backed by a two-party oblivious PRF 
 over ristretto255 and an oracle that lives outside your head — either a physical
 device or a printed square of paper.
 
-Live at **[soufianekh.space](https://soufianekh.space)**.
+Live at **[vaultless.space](https://vaultless.space)**.
 
 The site opens by asking which oracle you have, then walks you through setting it
 up before it asks for anything else:
